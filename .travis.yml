@@ -4,17 +4,18 @@ branches:
 
 language: bash
 
-before_install:
-  - openssl aes-256-cbc -K $encrypted_a059d02edbc8_key -iv $encrypted_a059d02edbc8_iv -in .travis/deploy_key.enc -out .travis/deploy_key -d
+addons:
+  ssh_known_hosts: ngplusdevelopment.com
 
 script:
   - echo "Deploying new version..."
 
-addons:
-  ssh_known_hosts: ngplusdevelopment.com
+before_deploy:
+  - openssl aes-256-cbc -K $encrypted_a059d02edbc8_key -iv $encrypted_a059d02edbc8_iv -in .travis/deploy_key.enc -out .travis/deploy_key -d
 
 deploy:
   provider: script
+  skip_cleanup: true
   script: bash .travis/deploy.sh
   on:
     branch: master
